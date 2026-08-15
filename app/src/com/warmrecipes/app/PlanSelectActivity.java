@@ -36,7 +36,7 @@ public class PlanSelectActivity extends Activity {
                 android.R.layout.simple_list_item_multiple_choice, labels));
         list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-        List<Long> current = PlanStore.get().recipeIds;
+        List<Long> current = PlanStore.get(this).recipeIds;
         for (int i = 0; i < recipes.size(); i++) {
             if (current.contains(recipes.get(i).id)) list.setItemChecked(i, true);
         }
@@ -50,7 +50,7 @@ public class PlanSelectActivity extends Activity {
                 Toast.makeText(this, "请至少选择一道食谱", Toast.LENGTH_SHORT).show();
                 return;
             }
-            PlanStore.get().setRecipeIds(ids, this);
+            PlanStore.get(this).setRecipeIds(ids);
             if (getIntent().getBooleanExtra("initial", false)) {
                 startActivity(new Intent(this, PlanShoppingActivity.class));
             }

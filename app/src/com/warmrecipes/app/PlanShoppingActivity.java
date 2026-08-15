@@ -38,7 +38,7 @@ public class PlanShoppingActivity extends Activity {
             startActivity(i);
         });
         done.setOnClickListener(v -> {
-            if (PlanStore.get().recipeIds.isEmpty()) {
+            if (PlanStore.get(this).recipeIds.isEmpty()) {
                 Toast.makeText(this, "清单为空", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -56,7 +56,7 @@ public class PlanShoppingActivity extends Activity {
     }
 
     private void render() {
-        List<PlanStore.PlanItem> items = PlanStore.get().items;
+        List<PlanStore.PlanItem> items = PlanStore.get(this).items;
         toBuyContainer.removeAllViews();
         haveContainer.removeAllViews();
         int toBuy = 0;
@@ -67,13 +67,11 @@ public class PlanShoppingActivity extends Activity {
             Button act = v.findViewById(R.id.pi_action);
             name.setText(it.name);
             amount.setText(it.amount);
+            act.setText(it.have ? "恢复" : "删除");
+            act.setOnClickListener(x -> { PlanStore.get(this).toggleHave(it); render(); });
             if (it.have) {
-                act.setText("恢复");
-                act.setOnClickListener(x -> { it.have = false; render(); });
                 haveContainer.addView(v);
             } else {
-                act.setText("删除");
-                act.setOnClickListener(x -> { it.have = true; render(); });
                 toBuyContainer.addView(v);
                 toBuy++;
             }

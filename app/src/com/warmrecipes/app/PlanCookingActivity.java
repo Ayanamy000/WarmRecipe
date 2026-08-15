@@ -36,7 +36,7 @@ public class PlanCookingActivity extends Activity {
             startActivity(i);
         });
         done.setOnClickListener(v -> {
-            PlanStore.get().clear();
+            PlanStore.get(this).clear();
             Toast.makeText(this, "全部完成，清单已清空 🎉", Toast.LENGTH_SHORT).show();
             finish();
         });
@@ -52,7 +52,7 @@ public class PlanCookingActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        list.setAdapter(new RecipeAdapter(PlanStore.get().selectedRecipes(this)));
+        list.setAdapter(new RecipeAdapter(PlanStore.get(this).selectedRecipes()));
     }
 
     private class RecipeAdapter extends BaseAdapter {

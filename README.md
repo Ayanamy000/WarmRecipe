@@ -69,3 +69,4 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 
 - 每步时长支持 `10分钟`、`1小时30分钟` 等写法；详情页总时长为各步时长的自动求和。
 - 分类切换会自动带入对应默认图标（可再手动改选）。
+- 预定清单会自动保存，重开 App 仍在；点「制作完成」后清空。

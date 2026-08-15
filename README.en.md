@@ -69,3 +69,4 @@ The output `WarmRecipe-v1.1.apk` is copied back to the project root.
 
 - Step durations support forms like `10分钟`, `1小时30分钟`; the detail page sums them into a total time.
 - Selecting a category auto-fills its default icon (you can still pick another one manually).
+- The planning list auto-saves and survives an app restart; it is cleared when you tap "制作完成".
