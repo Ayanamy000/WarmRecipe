@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 基础主题（奶油杏） -->
+    <style name="Theme.WarmRecipes" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#FBF4EA</item>
+        <item name="android:colorPrimary">#E8A87C</item>
+        <item name="android:colorPrimaryDark">#D28A5E</item>
+        <item name="android:colorAccent">#E8A87C</item>
+        <item name="android:statusBarColor">#FBF4EA</item>
+        <item name="android:navigationBarColor">#FBF4EA</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:textColorPrimary">#4A3B2F</item>
+        <item name="android:textColorSecondary">#9C8B7C</item>
+        <item name="android:colorBackground">#FBF4EA</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorSurfaceAlt">#F3E7D6</item>
+        <item name="colorDivider">#EFE3D4</item>
+        <item name="colorOnAccent">#FFFFFF</item>
+    </style>
+
+    <style name="Theme.WarmRecipes.Cream" parent="Theme.WarmRecipes" />
+
+    <style name="Theme.WarmRecipes.Peach" parent="Theme.WarmRecipes">
+        <item name="android:windowBackground">#FDF0EC</item>
+        <item name="android:colorPrimary">#F29492</item>
+        <item name="android:colorPrimaryDark">#E07B7B</item>
+        <item name="android:colorAccent">#F29492</item>
+        <item name="android:statusBarColor">#FDF0EC</item>
+        <item name="android:navigationBarColor">#FDF0EC</item>
+        <item name="android:textColorPrimary">#4A3432</item>
+        <item name="android:textColorSecondary">#B08E8B</item>
+        <item name="android:colorBackground">#FDF0EC</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorSurfaceAlt">#F9E0DA</item>
+        <item name="colorDivider">#F5DCD7</item>
+    </style>
+
+    <style name="Theme.WarmRecipes.Matcha" parent="Theme.WarmRecipes">
+        <item name="android:windowBackground">#F2F5EB</item>
+        <item name="android:colorPrimary">#93A96B</item>
+        <item name="android:colorPrimaryDark">#7C9257</item>
+        <item name="android:colorAccent">#93A96B</item>
+        <item name="android:statusBarColor">#F2F5EB</item>
+        <item name="android:navigationBarColor">#F2F5EB</item>
+        <item name="android:textColorPrimary">#3D4632</item>
+        <item name="android:textColorSecondary">#8B967C</item>
+        <item name="android:colorBackground">#F2F5EB</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorSurfaceAlt">#E4EBD5</item>
+        <item name="colorDivider">#E3E9D3</item>
+    </style>
+
+    <style name="Theme.WarmRecipes.Orange" parent="Theme.WarmRecipes">
+        <item name="android:windowBackground">#FDF3E7</item>
+        <item name="android:colorPrimary">#F2A65A</item>
+        <item name="android:colorPrimaryDark">#DE8F43</item>
+        <item name="android:colorAccent">#F2A65A</item>
+        <item name="android:statusBarColor">#FDF3E7</item>
+        <item name="android:navigationBarColor">#FDF3E7</item>
+        <item name="android:textColorPrimary">#4A3A2A</item>
+        <item name="android:textColorSecondary">#A78C6E</item>
+        <item name="android:colorBackground">#FDF3E7</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorSurfaceAlt">#F8E5CE</item>
+        <item name="colorDivider">#F5E3CA</item>
+    </style>
+
+    <style name="Theme.WarmRecipes.Blue" parent="Theme.WarmRecipes">
+        <item name="android:windowBackground">#EEF3F6</item>
+        <item name="android:colorPrimary">#8FB5C9</item>
+        <item name="android:colorPrimaryDark">#74A0B7</item>
+        <item name="android:colorAccent">#8FB5C9</item>
+        <item name="android:statusBarColor">#EEF3F6</item>
+        <item name="android:navigationBarColor">#EEF3F6</item>
+        <item name="android:textColorPrimary">#36434B</item>
+        <item name="android:textColorSecondary">#82909A</item>
+        <item name="android:colorBackground">#EEF3F6</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorSurfaceAlt">#DEE9EE</item>
+        <item name="colorDivider">#DDE8EC</item>
+    </style>
+
+    <style name="Theme.WarmRecipes.Lavender" parent="Theme.WarmRecipes">
+        <item name="android:windowBackground">#F4F0F8</item>
+        <item name="android:colorPrimary">#B39DDB</item>
+        <item name="android:colorPrimaryDark">#9C84C7</item>
+        <item name="android:colorAccent">#B39DDB</item>
+        <item name="android:statusBarColor">#F4F0F8</item>
+        <item name="android:navigationBarColor">#F4F0F8</item>
+        <item name="android:textColorPrimary">#453A52</item>
+        <item name="android:textColorSecondary">#9388A0</item>
+        <item name="android:colorBackground">#F4F0F8</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorSurfaceAlt">#E9E1F1</item>
+        <item name="colorDivider">#E8E0F0</item>
+    </style>
+</resources>

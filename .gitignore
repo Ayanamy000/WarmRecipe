@@ -1,0 +1,13 @@
+﻿# Android SDK (downloaded locally, not source)
+/sdk/
+
+# Signing key - never commit
+/release.keystore
+
+# Build artifacts
+/build/
+*.class
+
+# OS files
+Thumbs.db
+.DS_Store

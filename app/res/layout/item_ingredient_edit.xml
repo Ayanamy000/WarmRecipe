@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <EditText
+        android:id="@+id/ing_name_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="食材 / 调料"
+        android:singleLine="true"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
+        android:textSize="14sp"
+        android:background="@drawable/bg_input"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHint="?android:attr/textColorSecondary" />
+
+    <EditText
+        android:id="@+id/ing_amount_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="8dp"
+        android:hint="重量 / 数量"
+        android:singleLine="true"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
+        android:textSize="14sp"
+        android:background="@drawable/bg_input"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHint="?android:attr/textColorSecondary" />
+
+    <Button
+        android:id="@+id/ing_remove"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:text="✕"
+        android:textSize="16sp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:stateListAnimator="@null" />
+</LinearLayout>
