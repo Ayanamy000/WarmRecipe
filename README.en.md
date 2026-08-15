@@ -13,11 +13,12 @@ A cozy, minimalist recipe-book app for Android. Pure native with **zero third-pa
 - **Edit & delete**: existing recipes can be modified or removed.
 - **Custom color themes**: 6 warm palettes (Cream Apricot / Peach Pink / Matcha Green / Warm Orange / Misty Blue / Lavender), switchable anytime.
 - **Import / export**: share a single recipe as text, export all recipes as a JSON backup, or import recipes from a file.
+- **Meal planning (shopping list)**: pick one or more recipes to generate a merged grocery list, cross off ingredients you already have (with undo), then jump to a "selected recipes" cooking view after shopping — tap any recipe to cook it, and clear everything when done.
 - **Local-only storage**: data is kept in the phone's internal storage (`recipes.json`) — no network, no uploads.
 
 ## Install on an Android phone
 
-1. Copy `温馨食谱-v1.0.apk` (or `WarmRecipe-v1.0.apk`) to the phone (WeChat/QQ file transfer, USB, or cloud drive).
+1. Copy `温馨食谱-v1.1.apk` (or `WarmRecipe-v1.1.apk`) to the phone (WeChat/QQ file transfer, USB, or cloud drive).
 2. Tap the APK to install; if prompted about "unknown sources", allow "Install unknown apps" (the system guides you on first install).
 3. The "温馨食谱" icon appears on the home screen — tap to open.
 
@@ -35,15 +36,19 @@ A cozy, minimalist recipe-book app for Android. Pure native with **zero third-pa
 │     ├─ DetailActivity.java   # detail (ingredients -> steps)
 │     ├─ EditActivity.java     # create / edit
 │     ├─ ThemeActivity.java    # theme picker
+│     ├─ PlanSelectActivity.java   # pick recipes for planning
+│     ├─ PlanShoppingActivity.java # shopping list
+│     ├─ PlanCookingActivity.java  # cooking view
 │     ├─ Recipe.java           # data model + duration estimate
 │     ├─ RecipeStore.java      # JSON local storage
+│     ├─ PlanStore.java        # planning list (merged)
 │     ├─ Palette.java          # palette definitions
 │     └─ ThemeManager.java     # theme read/apply
 ├─ sdk/                        # local Android SDK (build-tools 35.0.0 + android-35)
 ├─ tools/                      # Fetch (downloader) / MakeIcon (icon generator)
 ├─ build.ps1                   # one-shot build script (no Gradle)
 ├─ release.keystore            # signing key (password: recipe123 — keep safe / replace)
-└─ 温馨食谱-v1.0.apk           # build output (installable)
+└─ 温馨食谱-v1.1.apk           # build output (installable)
 ```
 
 ## Rebuilding
@@ -56,7 +61,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 ```
 
 Pipeline: `aapt2 compile resources → link to generate R.java → javac → d8 dex → package → zipalign → apksigner sign`.
-The output `WarmRecipe-v1.0.apk` is copied back to the project root.
+The output `WarmRecipe-v1.1.apk` is copied back to the project root.
 
 > Note: aapt2 and other native tools cannot open non-ASCII paths on Windows, so the script stages the build in the system temp directory (ASCII path) and copies the APK back.
 

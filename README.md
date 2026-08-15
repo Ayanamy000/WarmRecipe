@@ -13,11 +13,12 @@
 - **编辑与删除**：已有食谱可修改、删除。
 - **自定义主题配色**：6 套温馨配色（奶油杏 / 蜜桃粉 / 抹茶绿 / 暖橙 / 雾蓝 / 薰衣草），随时切换。
 - **导入 / 导出**：单个食谱可一键分享为文本；全部食谱可导出为 JSON 备份，也能从文件导入读取。
+- **预定食材**：勾选一份或多份食谱生成购物清单（同名食材自动合并），可划掉家里已有的食材并随时恢复；购买完成后进入「选定菜谱」烹饪页，点任意菜谱看做法，全部做完一键清空。
 - **纯本机存储**：数据保存在手机内部存储 `recipes.json`，不上传、不联网。
 
 ## 安装到安卓手机
 
-1. 把 `温馨食谱-v1.0.apk`（或 `WarmRecipe-v1.0.apk`）传到手机（微信/QQ 文件传输、数据线、网盘均可）。
+1. 把 `温馨食谱-v1.1.apk`（或 `WarmRecipe-v1.1.apk`）传到手机（微信/QQ 文件传输、数据线、网盘均可）。
 2. 手机上点击该 APK 安装；若提示「未知来源应用」，在设置里允许「安装未知应用」即可（首次安装时系统会引导）。
 3. 桌面出现「温馨食谱」图标，点开即用。
 
@@ -35,15 +36,19 @@
 │     ├─ DetailActivity.java   # 详情（食材 → 步骤）
 │     ├─ EditActivity.java     # 新建 / 编辑
 │     ├─ ThemeActivity.java    # 主题配色选择
+│     ├─ PlanSelectActivity.java   # 预定：多选食谱
+│     ├─ PlanShoppingActivity.java # 购物清单页
+│     ├─ PlanCookingActivity.java  # 烹饪页
 │     ├─ Recipe.java           # 数据模型 + 时长估算
 │     ├─ RecipeStore.java      # JSON 本机存储
+│     ├─ PlanStore.java        # 预定清单（合并）
 │     ├─ Palette.java          # 配色定义
 │     └─ ThemeManager.java     # 主题读写/应用
 ├─ sdk/                        # 本地 Android SDK（build-tools 35.0.0 + android-35）
 ├─ tools/                      # Fetch(下载器) / MakeIcon(图标生成)
 ├─ build.ps1                   # 一键构建脚本（无需 Gradle）
 ├─ release.keystore            # 签名密钥（密码 recipe123，请妥善保管/自行更换）
-└─ 温馨食谱-v1.0.apk           # 构建产物（可直接安装）
+└─ 温馨食谱-v1.1.apk           # 构建产物（可直接安装）
 ```
 
 ## 重新构建
@@ -56,7 +61,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 ```
 
 构建流程：`aapt2 编译资源 → link 生成 R.java → javac → d8 转 dex → 打包 → zipalign → apksigner 签名`。
-产物输出为 `WarmRecipe-v1.0.apk`（会自动拷回项目根目录）。
+产物输出为 `WarmRecipe-v1.1.apk`（会自动拷回项目根目录）。
 
 > 说明：aapt2 等原生工具在 Windows 上无法打开含中文的路径，因此脚本会在系统临时目录（ASCII 路径）完成构建后把 APK 拷回。
 

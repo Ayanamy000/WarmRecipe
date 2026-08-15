@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.warmrecipes.app"
-    android:versionCode="1"
-    android:versionName="1.0">
+    android:versionCode="2"
+    android:versionName="1.1">
 
     <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="35" />
 
@@ -26,5 +26,8 @@
         <activity android:name=".DetailActivity" android:exported="false" />
         <activity android:name=".EditActivity" android:exported="false" />
         <activity android:name=".ThemeActivity" android:exported="false" />
+        <activity android:name=".PlanSelectActivity" android:exported="false" />
+        <activity android:name=".PlanShoppingActivity" android:exported="false" />
+        <activity android:name=".PlanCookingActivity" android:exported="false" />
     </application>
 </manifest>

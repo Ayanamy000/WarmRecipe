@@ -46,6 +46,8 @@ public class MainActivity extends Activity {
 
         TextView title = findViewById(R.id.title);
         title.setText(R.string.app_name);
+        Button planBtn = findViewById(R.id.btn_plan);
+        planBtn.setOnClickListener(v -> startPlan());
         Button themeBtn = findViewById(R.id.btn_theme);
         themeBtn.setOnClickListener(v -> startActivity(new Intent(this, ThemeActivity.class)));
         Button moreBtn = findViewById(R.id.btn_more);
@@ -87,6 +89,16 @@ public class MainActivity extends Activity {
             return;
         }
         refresh();
+    }
+
+    private void startPlan() {
+        if (RecipeStore.get(this).all().isEmpty()) {
+            Toast.makeText(this, "请先添加食谱", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent i = new Intent(this, PlanSelectActivity.class);
+        i.putExtra("initial", true);
+        startActivity(i);
     }
 
     private void showMoreMenu() {
