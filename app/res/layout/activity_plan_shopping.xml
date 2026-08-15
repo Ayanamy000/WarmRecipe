@@ -133,4 +133,6 @@
         android:textSize="16sp"
         android:textColor="?attr/colorOnAccent"
         android:stateListAnimator="@null" />
+
+    <include layout="@layout/bottom_nav" />
 </LinearLayout>

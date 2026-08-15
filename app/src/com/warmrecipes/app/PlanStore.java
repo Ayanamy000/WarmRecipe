@@ -22,6 +22,7 @@ public class PlanStore {
     private final File file;
     public final ArrayList<Long> recipeIds = new ArrayList<>();
     public final ArrayList<PlanItem> items = new ArrayList<>();
+    public int phase = 0; // 0=未开始(选菜) 1=购物中 2=烹饪中
 
     public static class PlanItem {
         public String name = "";
@@ -40,10 +41,17 @@ public class PlanStore {
         load();
     }
 
-    public synchronized void setRecipeIds(List<Long> ids) {
+    public synchronized void setRecipeIds(List<Long> ids, boolean start) {
         recipeIds.clear();
         recipeIds.addAll(ids);
+        if (start) phase = 1;
         rebuild();
+        save();
+    }
+
+    /** 购买完成：进入烹饪阶段。 */
+    public synchronized void markCooking() {
+        phase = 2;
         save();
     }
 
@@ -65,6 +73,7 @@ public class PlanStore {
     public synchronized void clear() {
         recipeIds.clear();
         items.clear();
+        phase = 0;
         file.delete();
     }
 
@@ -120,6 +129,7 @@ public class PlanStore {
             JSONArray ids = new JSONArray();
             for (long id : recipeIds) ids.put(id);
             o.put("recipeIds", ids);
+            o.put("phase", phase);
             JSONArray have = new JSONArray();
             for (PlanItem it : items) if (it.have) have.put(it.name);
             o.put("have", have);
@@ -139,6 +149,7 @@ public class PlanStore {
             fis.read(b);
             fis.close();
             JSONObject o = new JSONObject(new String(b, "UTF-8"));
+            phase = o.optInt("phase", 1);
             JSONArray ids = o.optJSONArray("recipeIds");
             if (ids != null) {
                 recipeIds.clear();

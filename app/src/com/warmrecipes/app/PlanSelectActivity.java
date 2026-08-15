@@ -22,6 +22,7 @@ public class PlanSelectActivity extends Activity {
         ThemeManager.apply(this);
         super.onCreate(b);
         setContentView(R.layout.activity_plan_select);
+        Nav.wire(this, true);
 
         Button back = findViewById(R.id.back);
         Button ok = findViewById(R.id.ok);
@@ -50,7 +51,7 @@ public class PlanSelectActivity extends Activity {
                 Toast.makeText(this, "请至少选择一道食谱", Toast.LENGTH_SHORT).show();
                 return;
             }
-            PlanStore.get(this).setRecipeIds(ids);
+            PlanStore.get(this).setRecipeIds(ids, getIntent().getBooleanExtra("initial", false));
             if (getIntent().getBooleanExtra("initial", false)) {
                 startActivity(new Intent(this, PlanShoppingActivity.class));
             }

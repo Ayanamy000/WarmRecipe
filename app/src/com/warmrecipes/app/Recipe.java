@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class Recipe {
     public long id = 0;
     public String name = "";
-    public String category = "其他";
+    public String category = "";
     public String emoji = "\uD83C\uDF72"; // 🍲
     public final ArrayList<Ingredient> ingredients = new ArrayList<>();
     public final ArrayList<Step> steps = new ArrayList<>();
@@ -26,10 +26,6 @@ public class Recipe {
         public String instruction = "";
         public String duration = "";
     }
-
-    public static final String[] CATEGORIES = {
-        "炒菜", "炖菜", "蒸菜", "油炸", "烤肉", "凉菜", "汤", "主食", "烘焙", "甜品", "小吃", "饮品", "其他"
-    };
 
     public static String emojiFor(String category) {
         switch (category) {
@@ -73,6 +69,16 @@ public class Recipe {
         if (h > 0 && m > 0) return "约 " + h + " 小时 " + m + " 分钟";
         if (h > 0) return "约 " + h + " 小时";
         return "约 " + m + " 分钟";
+    }
+
+    /** 列表副标题：分类 · N 步 · 约总时长（分类为空时省略）。 */
+    public String subtitle() {
+        String total = totalLabel();
+        StringBuilder sb = new StringBuilder();
+        if (!category.isEmpty()) sb.append(category).append(" · ");
+        sb.append(steps.size()).append(" 步");
+        if (!total.isEmpty()) sb.append(" · ").append(total);
+        return sb.toString();
     }
 
     /** 生成用于分享的可读文本。 */

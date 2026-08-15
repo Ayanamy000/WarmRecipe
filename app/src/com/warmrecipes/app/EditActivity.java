@@ -1,6 +1,7 @@
 package com.warmrecipes.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class EditActivity extends Activity {
     private static final String[] EMOJIS = {
         "🥘", "🍲", "🍥", "🍤", "🍖", "🥗", "🥣", "🍚", "🍞", "🍰",
@@ -22,8 +25,8 @@ public class EditActivity extends Activity {
     private boolean editing = false;
     private EditText nameInput, notesInput;
     private LinearLayout categoryContainer, emojiContainer, ingContainer, stepContainer;
-    private String category = "其他";
-    private String emoji = Recipe.emojiFor("其他");
+    private String category = "";
+    private String emoji = "🍽️";
 
     @Override
     protected void onCreate(Bundle b) {
@@ -69,13 +72,19 @@ public class EditActivity extends Activity {
             }
         } else {
             title.setText("新建食谱");
+            List<String> cats = CategoryStore.get(this).all();
+            category = cats.isEmpty() ? "" : cats.get(0);
+            emoji = Recipe.emojiFor(category);
             addIngredientRow(null, null);
             addStepRow(null, null);
+            updateCategoryChips();
+            updateEmoji();
         }
     }
 
     private void buildCategories() {
-        for (String c : Recipe.CATEGORIES) {
+        categoryContainer.removeAllViews();
+        for (String c : CategoryStore.get(this).all()) {
             Button b = new Button(this);
             b.setText(c);
             b.setAllCaps(false);
@@ -87,6 +96,10 @@ public class EditActivity extends Activity {
                 updateCategoryChips();
                 updateEmoji();
             });
+            b.setOnLongClickListener(v -> {
+                promptDeleteCategory((String) v.getTag());
+                return true;
+            });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             int m = dp(4);
@@ -94,12 +107,64 @@ public class EditActivity extends Activity {
             b.setPadding(dp(14), dp(6), dp(14), dp(6));
             categoryContainer.addView(b, lp);
         }
+        Button add = new Button(this);
+        add.setText("＋ 添加品类");
+        add.setAllCaps(false);
+        add.setBackgroundResource(R.drawable.bg_chip);
+        add.setTextColor(colorAttr(android.R.attr.colorAccent));
+        add.setOnClickListener(v -> promptAddCategory());
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int m = dp(4);
+        lp.setMargins(m, m, m, m);
+        add.setPadding(dp(14), dp(6), dp(14), dp(6));
+        categoryContainer.addView(add, lp);
         updateCategoryChips();
+    }
+
+    private void promptAddCategory() {
+        LinearLayout wrap = new LinearLayout(this);
+        wrap.setPadding(dp(24), dp(12), dp(24), dp(4));
+        EditText input = new EditText(this);
+        input.setHint("品类名称，如：火锅、沙拉");
+        input.setSingleLine(true);
+        input.setBackgroundResource(R.drawable.bg_input);
+        input.setPadding(dp(14), dp(10), dp(14), dp(10));
+        wrap.addView(input, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        new AlertDialog.Builder(this)
+                .setTitle("添加品类")
+                .setView(wrap)
+                .setPositiveButton("添加", (d, w) -> {
+                    String name = input.getText().toString().trim();
+                    if (name.isEmpty()) {
+                        Toast.makeText(this, "请输入品类名称", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    CategoryStore.get(this).add(name);
+                    buildCategories();
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    private void promptDeleteCategory(String name) {
+        new AlertDialog.Builder(this)
+                .setTitle("删除品类")
+                .setMessage("确定删除「" + name + "」吗？已有食谱不受影响。")
+                .setPositiveButton("删除", (d, w) -> {
+                    CategoryStore.get(this).remove(name);
+                    if (name.equals(category)) category = "";
+                    buildCategories();
+                })
+                .setNegativeButton("取消", null)
+                .show();
     }
 
     private void updateCategoryChips() {
         for (int i = 0; i < categoryContainer.getChildCount(); i++) {
             Button b = (Button) categoryContainer.getChildAt(i);
+            if (b.getTag() == null) continue; // 「＋ 添加品类」
             boolean sel = category.equals(b.getTag());
             b.setSelected(sel);
             b.setTextColor(sel ? colorAttr(R.attr.colorOnAccent)

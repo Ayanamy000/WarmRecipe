@@ -167,7 +167,7 @@ public class RecipeStore {
         Recipe r = new Recipe();
         r.id = o.optLong("id");
         r.name = o.optString("name");
-        r.category = o.optString("category", "其他");
+        r.category = o.optString("category", "");
         r.emoji = o.optString("emoji", Recipe.emojiFor(r.category));
         JSONArray ing = o.optJSONArray("ingredients");
         if (ing != null) {

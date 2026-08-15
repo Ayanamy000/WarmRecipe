@@ -23,6 +23,7 @@ public class PlanCookingActivity extends Activity {
         ThemeManager.apply(this);
         super.onCreate(b);
         setContentView(R.layout.activity_plan_cooking);
+        Nav.wire(this, true);
 
         Button back = findViewById(R.id.back);
         Button edit = findViewById(R.id.edit_btn);
@@ -73,10 +74,7 @@ public class PlanCookingActivity extends Activity {
             Recipe r = data.get(i);
             ((TextView) v.findViewById(R.id.emoji)).setText(r.emoji);
             ((TextView) v.findViewById(R.id.name)).setText(r.name);
-            String total = r.totalLabel();
-            String meta = r.category + " · " + r.steps.size() + " 步"
-                    + (total.isEmpty() ? "" : " · " + total);
-            ((TextView) v.findViewById(R.id.subtitle)).setText(meta);
+            ((TextView) v.findViewById(R.id.subtitle)).setText(r.subtitle());
             ((TextView) v.findViewById(R.id.star)).setText(r.favorite ? "★" : "");
             return v;
         }

@@ -22,6 +22,7 @@ public class PlanShoppingActivity extends Activity {
         ThemeManager.apply(this);
         super.onCreate(b);
         setContentView(R.layout.activity_plan_shopping);
+        Nav.wire(this, true);
 
         Button back = findViewById(R.id.back);
         Button edit = findViewById(R.id.edit_btn);
@@ -42,6 +43,7 @@ public class PlanShoppingActivity extends Activity {
                 Toast.makeText(this, "清单为空", Toast.LENGTH_SHORT).show();
                 return;
             }
+            PlanStore.get(this).markCooking();
             startActivity(new Intent(this, PlanCookingActivity.class));
             finish();
         });

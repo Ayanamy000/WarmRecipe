@@ -8,17 +8,17 @@ A cozy, minimalist recipe-book app for Android. Pure native with **zero third-pa
 
 - **Add recipes**: enter **ingredients & seasonings with weight/quantity** first (e.g. `egg · 2 pcs`, `flour · 200 g`), then **step-by-step instructions** (what to do + approximate time for each step). Add/remove rows freely.
 - **Recipe detail**: shows the ingredient list first, then numbered steps with durations, plus an auto-calculated total time; supports notes, category and an emoji icon.
-- **Categories**: Stir-fry / Stew / Steamed / Fried / Roast / Cold dishes / Soup / Staple / Baking / Dessert / Snack / Drink / Other.
+- **Custom categories**: presets include Stir-fry / Stew / Steamed / Fried / Roast / Cold dishes / Soup / Staple / Baking / Dessert / Snack / Drink; add or delete categories anytime (long-press to delete, tap "＋ 添加品类" to add).
 - **Search & favorites**: search by name or ingredient; ★ to favorite.
 - **Edit & delete**: existing recipes can be modified or removed.
 - **Custom color themes**: 6 warm palettes (Cream Apricot / Peach Pink / Matcha Green / Warm Orange / Misty Blue / Lavender), switchable anytime.
 - **Import / export**: share a single recipe as text, export all recipes as a JSON backup, or import recipes from a file.
-- **Meal planning (shopping list)**: pick one or more recipes to generate a merged grocery list, cross off ingredients you already have (with undo), then jump to a "selected recipes" cooking view after shopping — tap any recipe to cook it, and clear everything when done.
+- **Meal planning**: the "预定" bottom tab picks recipes into a merged grocery list, lets you cross off items you have (with undo), then cook after shopping; progress auto-saves and survives app kills, and clears on "制作完成".
 - **Local-only storage**: data is kept in the phone's internal storage (`recipes.json`) — no network, no uploads.
 
 ## Install on an Android phone
 
-1. Copy `温馨食谱-v1.2.apk` (or `WarmRecipe-v1.2.apk`) to the phone (WeChat/QQ file transfer, USB, or cloud drive).
+1. Copy `温馨食谱-v1.3.apk` (or `WarmRecipe-v1.3.apk`) to the phone (WeChat/QQ file transfer, USB, or cloud drive).
 2. Tap the APK to install; if prompted about "unknown sources", allow "Install unknown apps" (the system guides you on first install).
 3. The "温馨食谱" icon appears on the home screen — tap to open.
 
@@ -42,13 +42,15 @@ A cozy, minimalist recipe-book app for Android. Pure native with **zero third-pa
 │     ├─ Recipe.java           # data model + duration estimate
 │     ├─ RecipeStore.java      # JSON local storage
 │     ├─ PlanStore.java        # planning list (merged)
+│     ├─ CategoryStore.java    # custom categories
+│     ├─ Nav.java              # bottom navigation
 │     ├─ Palette.java          # palette definitions
 │     └─ ThemeManager.java     # theme read/apply
 ├─ sdk/                        # local Android SDK (build-tools 35.0.0 + android-35)
 ├─ tools/                      # Fetch (downloader) / MakeIcon (icon generator)
 ├─ build.ps1                   # one-shot build script (no Gradle)
 ├─ release.keystore            # signing key (password: recipe123 — keep safe / replace)
-└─ 温馨食谱-v1.2.apk           # build output (installable)
+└─ 温馨食谱-v1.3.apk           # build output (installable)
 ```
 
 ## Rebuilding
@@ -61,7 +63,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 ```
 
 Pipeline: `aapt2 compile resources → link to generate R.java → javac → d8 dex → package → zipalign → apksigner sign`.
-The output `WarmRecipe-v1.2.apk` is copied back to the project root.
+The output `WarmRecipe-v1.3.apk` is copied back to the project root.
 
 > Note: aapt2 and other native tools cannot open non-ASCII paths on Windows, so the script stages the build in the system temp directory (ASCII path) and copies the APK back.
 

@@ -46,8 +46,6 @@ public class MainActivity extends Activity {
 
         TextView title = findViewById(R.id.title);
         title.setText(R.string.app_name);
-        Button planBtn = findViewById(R.id.btn_plan);
-        planBtn.setOnClickListener(v -> startPlan());
         Button themeBtn = findViewById(R.id.btn_theme);
         themeBtn.setOnClickListener(v -> startActivity(new Intent(this, ThemeActivity.class)));
         Button moreBtn = findViewById(R.id.btn_more);
@@ -79,6 +77,8 @@ public class MainActivity extends Activity {
             i.putExtra("id", r.id);
             startActivity(i);
         });
+
+        Nav.wire(this, false);
     }
 
     @Override
@@ -88,17 +88,8 @@ public class MainActivity extends Activity {
             recreate();
             return;
         }
+        buildChips();
         refresh();
-    }
-
-    private void startPlan() {
-        if (RecipeStore.get(this).all().isEmpty()) {
-            Toast.makeText(this, "请先添加食谱", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Intent i = new Intent(this, PlanSelectActivity.class);
-        i.putExtra("initial", true);
-        startActivity(i);
     }
 
     private void showMoreMenu() {
@@ -168,8 +159,13 @@ public class MainActivity extends Activity {
     }
 
     private void buildChips() {
+        chipContainer.removeAllViews();
         addChip("全部", null);
-        for (String c : Recipe.CATEGORIES) addChip(c, c);
+        List<String> cats = CategoryStore.get(this).all();
+        for (String c : cats) addChip(c, c);
+        if (selectedCategory != null && !cats.contains(selectedCategory)) {
+            selectedCategory = null;
+        }
         updateChips();
     }
 
@@ -252,10 +248,7 @@ public class MainActivity extends Activity {
             Recipe r = data.get(i);
             ((TextView) v.findViewById(R.id.emoji)).setText(r.emoji);
             ((TextView) v.findViewById(R.id.name)).setText(r.name);
-            String total = r.totalLabel();
-            String meta = r.category + " · " + r.steps.size() + " 步"
-                    + (total.isEmpty() ? "" : " · " + total);
-            ((TextView) v.findViewById(R.id.subtitle)).setText(meta);
+            ((TextView) v.findViewById(R.id.subtitle)).setText(r.subtitle());
             ((TextView) v.findViewById(R.id.star)).setText(r.favorite ? "★" : "");
             return v;
         }

@@ -48,7 +48,8 @@ public class DetailActivity extends Activity {
         title.setText(recipe.name);
         emoji.setText(recipe.emoji);
         name.setText(recipe.name);
-        meta.setText(recipe.category + " · " + recipe.steps.size() + " 步");
+        meta.setText(recipe.category.isEmpty() ? recipe.steps.size() + " 步"
+                : recipe.category + " · " + recipe.steps.size() + " 步");
         String t = recipe.totalLabel();
         time.setText(t.isEmpty() ? "时长：—" : "总时长：" + t);
         ingTitle.setText("食材与调料（" + recipe.ingredients.size() + "）");

@@ -80,4 +80,6 @@
         android:paddingRight="12dp"
         android:paddingBottom="8dp"
         android:scrollbars="none" />
+
+    <include layout="@layout/bottom_nav" />
 </LinearLayout>
