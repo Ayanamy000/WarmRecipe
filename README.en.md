@@ -8,7 +8,7 @@ A cozy, minimalist recipe-book app for Android. Pure native with **zero third-pa
 
 - **Add recipes**: enter **ingredients & seasonings with weight/quantity** first (e.g. `egg · 2 pcs`, `flour · 200 g`), then **step-by-step instructions** (what to do + approximate time for each step). Add/remove rows freely.
 - **Recipe detail**: shows the ingredient list first, then numbered steps with durations, plus an auto-calculated total time; supports notes, category and an emoji icon.
-- **Categories**: Breakfast / Lunch / Dinner / Dessert / Soup / Snack / Drink / Other.
+- **Categories**: Chinese / Western / Stir-fry / Stew / Soup / Dessert / Snack / Drink / Other.
 - **Search & favorites**: search by name or ingredient; ★ to favorite.
 - **Edit & delete**: existing recipes can be modified or removed.
 - **Custom color themes**: 6 warm palettes (Cream Apricot / Peach Pink / Matcha Green / Warm Orange / Misty Blue / Lavender), switchable anytime.

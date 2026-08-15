@@ -28,19 +28,20 @@ public class Recipe {
     }
 
     public static final String[] CATEGORIES = {
-        "早餐", "午餐", "晚餐", "甜品", "汤羹", "小吃", "饮品", "其他"
+        "中餐", "西餐", "炒菜", "炖菜", "汤", "甜品", "小吃", "饮品", "其他"
     };
 
     public static String emojiFor(String category) {
         switch (category) {
-            case "早餐": return "\uD83C\uDF73"; // 🍳
-            case "午餐": return "\uD83C\uDF5A"; // 🍚
-            case "晚餐": return "\uD83C\uDF5C"; // 🍜
-            case "甜品": return "\uD83C\uDF70"; // 🍰
-            case "汤羹": return "\uD83C\uDF72"; // 🍲
-            case "小吃": return "\uD83E\uDD5F"; // 🥟
-            case "饮品": return "\uD83C\uDF79"; // 🍹
-            default:     return "\uD83C\uDF7D\uFE0F"; // 🍽️
+            case "中餐": return "🥢";
+            case "西餐": return "🍝";
+            case "炒菜": return "🥘";
+            case "炖菜": return "🍲";
+            case "汤":   return "🥣";
+            case "甜品": return "🍰";
+            case "小吃": return "🥟";
+            case "饮品": return "🍹";
+            default:     return "🍽️";
         }
     }
 

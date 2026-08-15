@@ -14,8 +14,8 @@ import android.widget.Toast;
 
 public class EditActivity extends Activity {
     private static final String[] EMOJIS = {
-        "🍳", "🥗", "🍜", "🍚", "🍰", "🍲", "🥟", "🍹", "🍱", "🍝",
-        "🍮", "🥘", "🍛", "🍞", "🍕", "🥣", "🍵", "🍪"
+        "🥢", "🍳", "🥗", "🍜", "🍚", "🍰", "🍲", "🥟", "🍹", "🍱",
+        "🍝", "🍮", "🥘", "🍛", "🍞", "🍕", "🥣", "🍵", "🍪", "🥩"
     };
 
     private long id;
