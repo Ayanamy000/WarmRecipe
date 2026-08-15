@@ -1,6 +1,8 @@
 # WarmRecipe (温馨食谱)
 
-A cozy, minimalist recipe-book app for Xiaomi phones. Pure native Android with **zero third-party dependencies** — the APK is only ~58 KB.
+English | [简体中文](README.md)
+
+A cozy, minimalist recipe-book app for Android. Pure native with **zero third-party dependencies** — the APK is only ~58 KB.
 
 ## Features
 
@@ -12,13 +14,13 @@ A cozy, minimalist recipe-book app for Xiaomi phones. Pure native Android with *
 - **Custom color themes**: 6 warm palettes (Cream Apricot / Peach Pink / Matcha Green / Warm Orange / Misty Blue / Lavender), switchable anytime.
 - **Local-only storage**: data is kept in the phone's internal storage (`recipes.json`) — no network, no uploads.
 
-## Install on a Xiaomi phone
+## Install on an Android phone
 
 1. Copy `温馨食谱-v1.0.apk` (or `WarmRecipe-v1.0.apk`) to the phone (WeChat/QQ file transfer, USB, or cloud drive).
 2. Tap the APK to install; if prompted about "unknown sources", allow "Install unknown apps" (the system guides you on first install).
 3. The "温馨食谱" icon appears on the home screen — tap to open.
 
-> Requires Android 8.0 (API 26) or later, which covers the vast majority of Xiaomi devices.
+> Requires Android 8.0 (API 26) or later, which covers the vast majority of Android devices.
 
 ## Project structure
 
