@@ -161,12 +161,27 @@ public class MainActivity extends Activity {
     private void buildChips() {
         chipContainer.removeAllViews();
         addChip("全部", null);
-        List<String> cats = CategoryStore.get(this).all();
-        for (String c : cats) addChip(c, c);
-        if (selectedCategory != null && !cats.contains(selectedCategory)) {
+        List<CategoryStore.Category> cats = CategoryStore.get(this).all();
+        for (CategoryStore.Category c : cats) addCategoryChip(c);
+        if (selectedCategory != null && CategoryStore.get(this).byName(selectedCategory) == null) {
             selectedCategory = null;
         }
         updateChips();
+    }
+
+    private void addCategoryChip(CategoryStore.Category cat) {
+        Button b = new Button(this);
+        b.setAllCaps(false);
+        b.setBackgroundResource(R.drawable.bg_chip);
+        b.setTag(cat.name);
+        CategoryUi.styleChip(this, b, cat, dp(24));
+        b.setOnClickListener(v -> { selectedCategory = (String) v.getTag(); updateChips(); refresh(); });
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int m = dp(4);
+        lp.setMargins(m, m, m, m);
+        b.setPadding(dp(12), dp(6), dp(12), dp(6));
+        chipContainer.addView(b, lp);
     }
 
     private void addChip(String label, String value) {

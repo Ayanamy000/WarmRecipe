@@ -1,74 +1,75 @@
-# 温馨食谱（WarmRecipe）
+# WarmRecipe (温馨食谱)
 
-[English](README.en.md) | 简体中文
+English | [简体中文](README.zh-CN.md)
 
-一款面向**安卓系统**的温馨简洁风格食谱本 App，纯原生 Android（零第三方依赖，APK 仅约 58KB）。
+A cozy, minimalist recipe-book app for Android. Pure native with **zero third-party dependencies** — the APK is only ~70 KB.
 
-## 功能
+## Features
 
-- **添加食谱**：先填「食材与调料」的**重量/数量**（如 `鸡蛋 · 2个`、`面粉 · 200克`），再填**分步骤**（每一步做什么 + 大约时长），可随时增删行。
-- **食谱详情**：先展示食材/调料清单，再按序号展示每一步与时长，自动估算总时长；支持备注、分类、图标。
-- **自定义品类**：预置炒菜 / 炖菜 / 蒸菜 / 油炸 / 烤肉 / 凉菜 / 汤 / 主食 / 烘焙 / 甜品 / 小吃 / 饮品等品类，可随时增删（长按删除，点「＋ 添加品类」新建）。
-- **搜索与收藏**：按名称或食材搜索；★ 收藏。
-- **编辑与删除**：已有食谱可修改、删除。
-- **自定义主题配色**：6 套温馨配色（奶油杏 / 蜜桃粉 / 抹茶绿 / 暖橙 / 雾蓝 / 薰衣草），随时切换。
-- **导入 / 导出**：单个食谱可一键分享为文本；全部食谱可导出为 JSON 备份，也能从文件导入读取。
-- **预定食材**：底部「预定」Tab 可勾选食谱生成购物清单（同名食材合并），划掉已有食材可恢复；购买完成后进入烹饪页，进度自动保存、杀后台也能继续，制作完成一键清空。
-- **纯本机存储**：数据保存在手机内部存储 `recipes.json`，不上传、不联网。
+- **Add recipes**: enter **ingredients & seasonings with weight/quantity** first (e.g. `egg · 2 pcs`, `flour · 200 g`), then **step-by-step instructions** (what to do + approximate time for each step). Add/remove rows freely.
+- **Recipe detail**: shows the ingredient list first, then numbered steps with durations, plus an auto-calculated total time; supports notes, category and an emoji icon.
+- **Custom categories**: presets include Stir-fry / Stew / Steamed / Fried / Roast / Cold dishes / Soup / Staple / Baking / Dessert / Snack / Drink; add, rename or delete categories, and customize their icon (emoji or a photo from your gallery).
+- **Search & favorites**: search by name or ingredient; ★ to favorite.
+- **Edit & delete**: existing recipes can be modified or removed.
+- **Custom color themes**: 6 warm palettes (Cream Apricot / Peach Pink / Matcha Green / Warm Orange / Misty Blue / Lavender), switchable anytime.
+- **Import / export**: share a single recipe as text, export all recipes as a JSON backup, or import recipes from a file.
+- **Meal planning**: the "预定" bottom tab picks recipes into a merged grocery list, lets you cross off items you have (with undo), then cook after shopping; progress auto-saves and survives app kills, and clears on "制作完成".
+- **Local-only storage**: data is kept in the phone's internal storage (`recipes.json`) — no network, no uploads.
 
-## 安装到安卓手机
+## Install on an Android phone
 
-1. 把 `温馨食谱-v1.3.apk`（或 `WarmRecipe-v1.3.apk`）传到手机（微信/QQ 文件传输、数据线、网盘均可）。
-2. 手机上点击该 APK 安装；若提示「未知来源应用」，在设置里允许「安装未知应用」即可（首次安装时系统会引导）。
-3. 桌面出现「温馨食谱」图标，点开即用。
+1. Copy `温馨食谱-v1.4.apk` (or `WarmRecipe-v1.4.apk`) to the phone (WeChat/QQ file transfer, USB, or cloud drive).
+2. Tap the APK to install; if prompted about "unknown sources", allow "Install unknown apps" (the system guides you on first install).
+3. The "温馨食谱" icon appears on the home screen — tap to open.
 
-> 系统要求：Android 8.0（API 26）及以上，覆盖绝大多数安卓机型。
+> Requires Android 8.0 (API 26) or later, which covers the vast majority of Android devices.
 
-## 项目结构
+## Project structure
 
 ```
 食谱/
-├─ app/                        # 应用源码
+├─ app/                        # app source
 │  ├─ AndroidManifest.xml
-│  ├─ res/                     # 布局 / 样式(6套配色) / drawable / 图标
-│  └─ src/com/warmrecipes/app/ # Java 源码
-│     ├─ MainActivity.java     # 首页列表 + 搜索 + 分类筛选
-│     ├─ DetailActivity.java   # 详情（食材 → 步骤）
-│     ├─ EditActivity.java     # 新建 / 编辑
-│     ├─ ThemeActivity.java    # 主题配色选择
-│     ├─ PlanSelectActivity.java   # 预定：多选食谱
-│     ├─ PlanShoppingActivity.java # 购物清单页
-│     ├─ PlanCookingActivity.java  # 烹饪页
-│     ├─ Recipe.java           # 数据模型 + 时长估算
-│     ├─ RecipeStore.java      # JSON 本机存储
-│     ├─ PlanStore.java        # 预定清单（合并）
-│     ├─ CategoryStore.java    # 自定义品类管理
-│     ├─ Nav.java              # 底部菜单栏
-│     ├─ Palette.java          # 配色定义
-│     └─ ThemeManager.java     # 主题读写/应用
-├─ sdk/                        # 本地 Android SDK（build-tools 35.0.0 + android-35）
-├─ tools/                      # Fetch(下载器) / MakeIcon(图标生成)
-├─ build.ps1                   # 一键构建脚本（无需 Gradle）
-├─ release.keystore            # 签名密钥（密码 recipe123，请妥善保管/自行更换）
-└─ 温馨食谱-v1.3.apk           # 构建产物（可直接安装）
+│  ├─ res/                     # layouts / styles (6 palettes) / drawables / icons
+│  └─ src/com/warmrecipes/app/ # Java sources
+│     ├─ MainActivity.java     # home list + search + category filter
+│     ├─ DetailActivity.java   # detail (ingredients -> steps)
+│     ├─ EditActivity.java     # create / edit
+│     ├─ ThemeActivity.java    # theme picker
+│     ├─ PlanSelectActivity.java   # pick recipes for planning
+│     ├─ PlanShoppingActivity.java # shopping list
+│     ├─ PlanCookingActivity.java  # cooking view
+│     ├─ Recipe.java           # data model + duration estimate
+│     ├─ RecipeStore.java      # JSON local storage
+│     ├─ PlanStore.java        # planning list (merged)
+│     ├─ CategoryStore.java    # custom categories
+│     ├─ CategoryUi.java       # category icon rendering
+│     ├─ Nav.java              # bottom navigation
+│     ├─ Palette.java          # palette definitions
+│     └─ ThemeManager.java     # theme read/apply
+├─ sdk/                        # local Android SDK (build-tools 35.0.0 + android-35)
+├─ tools/                      # Fetch (downloader) / MakeIcon (icon generator)
+├─ build.ps1                   # one-shot build script (no Gradle)
+├─ release.keystore            # signing key (password: recipe123 — keep safe / replace)
+└─ 温馨食谱-v1.4.apk           # build output (installable)
 ```
 
-## 重新构建
+## Rebuilding
 
-本机需有 JDK 24；`sdk/` 内已含 build-tools 与 platform。在项目根目录执行：
+Requires JDK 24; `sdk/` already contains build-tools and the platform. From the project root:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 .\build.ps1
 ```
 
-构建流程：`aapt2 编译资源 → link 生成 R.java → javac → d8 转 dex → 打包 → zipalign → apksigner 签名`。
-产物输出为 `WarmRecipe-v1.3.apk`（会自动拷回项目根目录）。
+Pipeline: `aapt2 compile resources → link to generate R.java → javac → d8 dex → package → zipalign → apksigner sign`.
+The output `WarmRecipe-v1.4.apk` is copied back to the project root.
 
-> 说明：aapt2 等原生工具在 Windows 上无法打开含中文的路径，因此脚本会在系统临时目录（ASCII 路径）完成构建后把 APK 拷回。
+> Note: aapt2 and other native tools cannot open non-ASCII paths on Windows, so the script stages the build in the system temp directory (ASCII path) and copies the APK back.
 
-## 已知说明
+## Notes
 
-- 每步时长支持 `10分钟`、`1小时30分钟` 等写法；详情页总时长为各步时长的自动求和。
-- 分类切换会自动带入对应默认图标（可再手动改选）。
-- 预定清单会自动保存，重开 App 仍在；点「制作完成」后清空。
+- Step durations support forms like `10分钟`, `1小时30分钟`; the detail page sums them into a total time.
+- Selecting a category applies its icon to the recipe (you can still change the recipe icon manually).
+- The planning list auto-saves and survives an app restart; it is cleared when you tap "制作完成".

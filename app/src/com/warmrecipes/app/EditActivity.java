@@ -2,6 +2,8 @@ package com.warmrecipes.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -9,10 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 public class EditActivity extends Activity {
@@ -27,6 +34,12 @@ public class EditActivity extends Activity {
     private LinearLayout categoryContainer, emojiContainer, ingContainer, stepContainer;
     private String category = "";
     private String emoji = "🍽️";
+
+    private String pendingCatName = "";
+    private String pendingCatEmoji = "🍽️";
+    private int pendingCatMode = 0; // 0=添加 1=换图标
+    private AlertDialog catDialog;
+    private static final int REQ_CAT_IMAGE = 2001;
 
     @Override
     protected void onCreate(Bundle b) {
@@ -72,9 +85,10 @@ public class EditActivity extends Activity {
             }
         } else {
             title.setText("新建食谱");
-            List<String> cats = CategoryStore.get(this).all();
-            category = cats.isEmpty() ? "" : cats.get(0);
-            emoji = Recipe.emojiFor(category);
+            List<CategoryStore.Category> cats = CategoryStore.get(this).all();
+            category = cats.isEmpty() ? "" : cats.get(0).name;
+            CategoryStore.Category first = CategoryStore.get(this).byName(category);
+            emoji = (first != null && !first.emoji.isEmpty()) ? first.emoji : "🍽️";
             addIngredientRow(null, null);
             addStepRow(null, null);
             updateCategoryChips();
@@ -84,27 +98,28 @@ public class EditActivity extends Activity {
 
     private void buildCategories() {
         categoryContainer.removeAllViews();
-        for (String c : CategoryStore.get(this).all()) {
+        for (CategoryStore.Category c : CategoryStore.get(this).all()) {
             Button b = new Button(this);
-            b.setText(c);
             b.setAllCaps(false);
             b.setBackgroundResource(R.drawable.bg_chip);
-            b.setTag(c);
+            b.setTag(c.name);
+            CategoryUi.styleChip(this, b, c, dp(24));
             b.setOnClickListener(v -> {
                 category = (String) v.getTag();
-                emoji = Recipe.emojiFor(category);
+                CategoryStore.Category cat = CategoryStore.get(this).byName(category);
+                emoji = (cat != null && !cat.emoji.isEmpty()) ? cat.emoji : "🍽️";
                 updateCategoryChips();
                 updateEmoji();
             });
             b.setOnLongClickListener(v -> {
-                promptDeleteCategory((String) v.getTag());
+                promptCategoryMenu((String) v.getTag());
                 return true;
             });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             int m = dp(4);
             lp.setMargins(m, m, m, m);
-            b.setPadding(dp(14), dp(6), dp(14), dp(6));
+            b.setPadding(dp(12), dp(6), dp(12), dp(6));
             categoryContainer.addView(b, lp);
         }
         Button add = new Button(this);
@@ -122,30 +137,180 @@ public class EditActivity extends Activity {
         updateCategoryChips();
     }
 
-    private void promptAddCategory() {
+    private void promptCategoryMenu(String name) {
+        new AlertDialog.Builder(this)
+                .setTitle(name)
+                .setItems(new String[]{"改名", "换图标", "删除"}, (d, which) -> {
+                    if (which == 0) promptRenameCategory(name);
+                    else if (which == 1) promptChangeIcon(name);
+                    else promptDeleteCategory(name);
+                })
+                .show();
+    }
+
+    private void promptRenameCategory(String name) {
         LinearLayout wrap = new LinearLayout(this);
         wrap.setPadding(dp(24), dp(12), dp(24), dp(4));
         EditText input = new EditText(this);
-        input.setHint("品类名称，如：火锅、沙拉");
+        input.setText(name);
         input.setSingleLine(true);
         input.setBackgroundResource(R.drawable.bg_input);
         input.setPadding(dp(14), dp(10), dp(14), dp(10));
         wrap.addView(input, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         new AlertDialog.Builder(this)
-                .setTitle("添加品类")
+                .setTitle("改名")
                 .setView(wrap)
-                .setPositiveButton("添加", (d, w) -> {
-                    String name = input.getText().toString().trim();
-                    if (name.isEmpty()) {
-                        Toast.makeText(this, "请输入品类名称", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    CategoryStore.get(this).add(name);
+                .setPositiveButton("确定", (d, w) -> {
+                    String nn = input.getText().toString().trim();
+                    if (nn.isEmpty() || nn.equals(name)) return;
+                    CategoryStore.get(this).rename(name, nn);
+                    if (name.equals(category)) category = nn;
                     buildCategories();
                 })
                 .setNegativeButton("取消", null)
                 .show();
+    }
+
+    private void promptAddCategory() {
+        pendingCatName = "";
+        pendingCatEmoji = "🍽️";
+        pendingCatMode = 0;
+        showIconPanel("添加品类");
+    }
+
+    private void promptChangeIcon(String name) {
+        pendingCatName = name;
+        CategoryStore.Category c = CategoryStore.get(this).byName(name);
+        pendingCatEmoji = (c != null && !c.emoji.isEmpty()) ? c.emoji : "🍽️";
+        pendingCatMode = 1;
+        showIconPanel("换图标");
+    }
+
+    private void showIconPanel(String dialogTitle) {
+        LinearLayout panel = new LinearLayout(this);
+        panel.setOrientation(LinearLayout.VERTICAL);
+        panel.setPadding(dp(24), dp(8), dp(24), dp(4));
+
+        final EditText nameInput2 = new EditText(this);
+        nameInput2.setHint("品类名称，如：火锅");
+        nameInput2.setSingleLine(true);
+        nameInput2.setBackgroundResource(R.drawable.bg_input);
+        nameInput2.setPadding(dp(14), dp(10), dp(14), dp(10));
+        if (pendingCatMode == 0) {
+            nameInput2.setText(pendingCatName);
+            panel.addView(nameInput2, new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+
+        TextView label = new TextView(this);
+        label.setText("选择图标");
+        label.setTextSize(13);
+        label.setTextColor(colorAttr(android.R.attr.textColorSecondary));
+        label.setPadding(0, dp(12), 0, dp(4));
+        panel.addView(label);
+
+        HorizontalScrollView hsv = new HorizontalScrollView(this);
+        final LinearLayout emojiRow = buildEmojiRow();
+        hsv.addView(emojiRow);
+        panel.addView(hsv, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        Button album = new Button(this);
+        album.setText("📷 从相册选择图片");
+        album.setAllCaps(false);
+        album.setBackgroundResource(R.drawable.bg_button_outline);
+        album.setTextColor(colorAttr(android.R.attr.colorAccent));
+        album.setStateListAnimator(null);
+        LinearLayout.LayoutParams alp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        alp.setMargins(0, dp(12), 0, 0);
+        panel.addView(album, alp);
+
+        album.setOnClickListener(v -> {
+            if (pendingCatMode == 0) pendingCatName = nameInput2.getText().toString().trim();
+            if (catDialog != null) catDialog.dismiss();
+            launchAlbumPicker();
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(dialogTitle)
+                .setView(panel)
+                .setNegativeButton("取消", null);
+        if (pendingCatMode == 0) {
+            builder.setPositiveButton("添加", (d, w) -> {
+                String nm = nameInput2.getText().toString().trim();
+                if (nm.isEmpty()) {
+                    Toast.makeText(this, "请输入品类名称", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                CategoryStore.get(this).add(nm, pendingCatEmoji, "");
+                buildCategories();
+            });
+        } else {
+            builder.setPositiveButton("确定", (d, w) -> {
+                CategoryStore.get(this).setEmoji(pendingCatName, pendingCatEmoji);
+                buildCategories();
+            });
+        }
+        catDialog = builder.show();
+    }
+
+    private LinearLayout buildEmojiRow() {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        for (String e : EMOJIS) {
+            TextView t = new TextView(this);
+            t.setText(e);
+            t.setTextSize(22);
+            t.setTag(e);
+            t.setPadding(dp(8), dp(4), dp(8), dp(4));
+            t.setOnClickListener(v -> { pendingCatEmoji = (String) v.getTag(); highlightEmoji(row); });
+            row.addView(t);
+        }
+        highlightEmoji(row);
+        return row;
+    }
+
+    private void highlightEmoji(LinearLayout row) {
+        for (int i = 0; i < row.getChildCount(); i++) {
+            View v = row.getChildAt(i);
+            v.setSelected(v.getTag() != null && v.getTag().equals(pendingCatEmoji));
+        }
+    }
+
+    private void launchAlbumPicker() {
+        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        startActivityForResult(i, REQ_CAT_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int req, int res, Intent data) {
+        super.onActivityResult(req, res, data);
+        if (req != REQ_CAT_IMAGE || res != RESULT_OK || data == null || data.getData() == null) return;
+        Uri uri = data.getData();
+        try {
+            File dest = CategoryStore.get(this).newIconFile();
+            InputStream is = getContentResolver().openInputStream(uri);
+            OutputStream os = new FileOutputStream(dest);
+            byte[] buf = new byte[8192];
+            int n;
+            while ((n = is.read(buf)) != -1) os.write(buf, 0, n);
+            is.close();
+            os.close();
+            if (pendingCatMode == 0) {
+                String nm = pendingCatName.isEmpty() ? "新品类" : pendingCatName;
+                CategoryStore.get(this).add(nm, pendingCatEmoji, dest.getAbsolutePath());
+            } else {
+                CategoryStore.get(this).setImage(pendingCatName, dest.getAbsolutePath());
+            }
+            buildCategories();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "图片导入失败", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void promptDeleteCategory(String name) {
