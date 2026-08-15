@@ -61,6 +61,52 @@ public class RecipeStore {
         if (r != null) { r.favorite = !r.favorite; persist(); }
     }
 
+    /** 导出所有食谱为 JSON 字符串（用于备份）。 */
+    public synchronized String exportAllJson() {
+        try {
+            JSONArray arr = new JSONArray();
+            for (Recipe r : recipes) arr.put(toJson(r));
+            return arr.toString(2);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /** 从 JSON 导入（支持单个对象或数组），返回导入条数。 */
+    public synchronized int importJson(String json) {
+        if (json == null) return 0;
+        String s = json.trim();
+        if (s.isEmpty()) return 0;
+        int count = 0;
+        long base = System.currentTimeMillis();
+        for (Recipe r : recipes) if (r.id >= base) base = r.id + 1;
+        try {
+            if (s.startsWith("[")) {
+                JSONArray arr = new JSONArray(s);
+                for (int i = 0; i < arr.length(); i++) {
+                    Recipe r = fromJson(arr.getJSONObject(i));
+                    r.id = base + i;
+                    r.createdAt = System.currentTimeMillis();
+                    r.updatedAt = r.createdAt;
+                    recipes.add(0, r);
+                    count++;
+                }
+            } else {
+                Recipe r = fromJson(new JSONObject(s));
+                r.id = base;
+                r.createdAt = System.currentTimeMillis();
+                r.updatedAt = r.createdAt;
+                recipes.add(0, r);
+                count = 1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+        if (count > 0) persist();
+        return count;
+    }
+
     private void persist() {
         try {
             JSONArray arr = new JSONArray();

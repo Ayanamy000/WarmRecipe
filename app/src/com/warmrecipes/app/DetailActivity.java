@@ -35,6 +35,7 @@ public class DetailActivity extends Activity {
         TextView time = findViewById(R.id.time);
         starView = findViewById(R.id.star);
         Button editBtn = findViewById(R.id.edit_btn);
+        Button shareBtn = findViewById(R.id.share_btn);
         Button deleteBtn = findViewById(R.id.delete_btn);
         TextView ingTitle = findViewById(R.id.ing_title);
         TextView stepTitle = findViewById(R.id.step_title);
@@ -66,6 +67,8 @@ public class DetailActivity extends Activity {
             startActivity(i);
         });
 
+        shareBtn.setOnClickListener(v -> shareRecipe());
+
         deleteBtn.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle("删除食谱")
                 .setMessage("确定要删除「" + recipe.name + "」吗？此操作无法撤销。")
@@ -79,6 +82,15 @@ public class DetailActivity extends Activity {
         renderIngredients();
         renderSteps();
         renderNotes();
+    }
+
+    private void shareRecipe() {
+        String text = recipe.toShareText();
+        Intent send = new Intent(Intent.ACTION_SEND);
+        send.setType("text/plain");
+        send.putExtra(Intent.EXTRA_SUBJECT, recipe.name);
+        send.putExtra(Intent.EXTRA_TEXT, text);
+        startActivity(Intent.createChooser(send, "分享食谱"));
     }
 
     private void renderFavorite() {

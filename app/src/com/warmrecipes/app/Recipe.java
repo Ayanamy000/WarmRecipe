@@ -70,4 +70,31 @@ public class Recipe {
         if (h > 0) return "约 " + h + " 小时";
         return "约 " + m + " 分钟";
     }
+
+    /** 生成用于分享的可读文本。 */
+    public String toShareText() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(emoji).append(' ').append(name).append('\n');
+        sb.append("分类：").append(category).append('\n');
+        String t = totalLabel();
+        if (!t.isEmpty()) sb.append("总时长：").append(t).append('\n');
+        sb.append('\n').append("【食材与调料】\n");
+        for (Ingredient x : ingredients) {
+            sb.append("· ").append(x.name);
+            if (!x.amount.trim().isEmpty()) sb.append("　").append(x.amount);
+            sb.append('\n');
+        }
+        sb.append('\n').append("【步骤】\n");
+        for (int i = 0; i < steps.size(); i++) {
+            Step s = steps.get(i);
+            sb.append(i + 1).append(". ").append(s.instruction);
+            String d = s.duration.trim();
+            if (!d.isEmpty()) sb.append("（").append(d).append("）");
+            sb.append('\n');
+        }
+        if (!notes.trim().isEmpty()) {
+            sb.append('\n').append("【备注】\n").append(notes.trim()).append('\n');
+        }
+        return sb.toString().trim();
+    }
 }

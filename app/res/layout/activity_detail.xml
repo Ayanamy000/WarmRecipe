@@ -122,10 +122,23 @@
                     android:layout_marginTop="16dp">
 
                     <Button
+                        android:id="@+id/share_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_outline"
+                        android:text="分享"
+                        android:textAllCaps="false"
+                        android:textSize="15sp"
+                        android:textColor="?android:attr/colorAccent"
+                        android:stateListAnimator="@null" />
+
+                    <Button
                         android:id="@+id/edit_btn"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
                         android:background="@drawable/bg_button_primary"
                         android:text="编辑"
                         android:textAllCaps="false"

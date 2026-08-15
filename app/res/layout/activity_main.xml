@@ -40,6 +40,22 @@
             android:textSize="14sp"
             android:textColor="?android:attr/colorAccent"
             android:stateListAnimator="@null" />
+
+        <Button
+            android:id="@+id/btn_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:text="⋯"
+            android:textSize="18sp"
+            android:textColor="?android:attr/colorAccent"
+            android:stateListAnimator="@null" />
     </LinearLayout>
 
     <EditText

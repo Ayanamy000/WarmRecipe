@@ -12,6 +12,7 @@ A cozy, minimalist recipe-book app for Android. Pure native with **zero third-pa
 - **Search & favorites**: search by name or ingredient; ★ to favorite.
 - **Edit & delete**: existing recipes can be modified or removed.
 - **Custom color themes**: 6 warm palettes (Cream Apricot / Peach Pink / Matcha Green / Warm Orange / Misty Blue / Lavender), switchable anytime.
+- **Import / export**: share a single recipe as text, export all recipes as a JSON backup, or import recipes from a file.
 - **Local-only storage**: data is kept in the phone's internal storage (`recipes.json`) — no network, no uploads.
 
 ## Install on an Android phone

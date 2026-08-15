@@ -3,6 +3,7 @@ package com.warmrecipes.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,7 +17,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +33,8 @@ public class MainActivity extends Activity {
     private RecipeAdapter adapter;
     private String selectedCategory = null; // null = 全部
     private String appliedThemeId;
+    private static final int REQ_EXPORT = 1001;
+    private static final int REQ_IMPORT = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,8 @@ public class MainActivity extends Activity {
         title.setText(R.string.app_name);
         Button themeBtn = findViewById(R.id.btn_theme);
         themeBtn.setOnClickListener(v -> startActivity(new Intent(this, ThemeActivity.class)));
+        Button moreBtn = findViewById(R.id.btn_more);
+        moreBtn.setOnClickListener(v -> showMoreMenu());
 
         searchInput = findViewById(R.id.search_input);
         chipContainer = findViewById(R.id.chip_container);
@@ -78,6 +87,72 @@ public class MainActivity extends Activity {
             return;
         }
         refresh();
+    }
+
+    private void showMoreMenu() {
+        new AlertDialog.Builder(this)
+                .setTitle("导入 / 备份")
+                .setItems(new String[]{"导出全部备份", "导入食谱"}, (d, which) -> {
+                    if (which == 0) exportBackup();
+                    else importRecipes();
+                })
+                .show();
+    }
+
+    private void exportBackup() {
+        String json = RecipeStore.get(this).exportAllJson();
+        if (json == null || json.isEmpty()) {
+            Toast.makeText(this, "还没有可导出的食谱", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("application/json");
+        i.putExtra(Intent.EXTRA_TITLE, "recipes-backup.json");
+        startActivityForResult(i, REQ_EXPORT);
+    }
+
+    private void importRecipes() {
+        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("*/*");
+        startActivityForResult(i, REQ_IMPORT);
+    }
+
+    @Override
+    protected void onActivityResult(int req, int res, Intent data) {
+        super.onActivityResult(req, res, data);
+        if (res != RESULT_OK || data == null || data.getData() == null) return;
+        Uri uri = data.getData();
+        if (req == REQ_EXPORT) {
+            try {
+                String json = RecipeStore.get(this).exportAllJson();
+                OutputStream os = getContentResolver().openOutputStream(uri);
+                if (os == null) throw new RuntimeException("null stream");
+                os.write(json.getBytes("UTF-8"));
+                os.close();
+                Toast.makeText(this, "备份已导出", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(this, "导出失败", Toast.LENGTH_SHORT).show();
+            }
+        } else if (req == REQ_IMPORT) {
+            try {
+                InputStream is = getContentResolver().openInputStream(uri);
+                if (is == null) throw new RuntimeException("null stream");
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                byte[] buf = new byte[4096];
+                int n;
+                while ((n = is.read(buf)) != -1) baos.write(buf, 0, n);
+                is.close();
+                String json = new String(baos.toByteArray(), "UTF-8");
+                int count = RecipeStore.get(this).importJson(json);
+                Toast.makeText(this, count > 0 ? "已导入 " + count + " 条食谱" : "未识别到食谱",
+                        Toast.LENGTH_SHORT).show();
+                refresh();
+            } catch (Exception e) {
+                Toast.makeText(this, "导入失败，请选择由本应用导出的 JSON 文件", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void buildChips() {
