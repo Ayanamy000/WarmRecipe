@@ -15,7 +15,7 @@
         android:paddingBottom="8dp">
 
         <Button
-            android:id="@+id/back"
+            android:id="@+id/plan_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="0dp"
@@ -28,10 +28,11 @@
             android:text="←"
             android:textSize="22sp"
             android:textColor="?android:attr/colorAccent"
-            android:stateListAnimator="@null" />
+            android:stateListAnimator="@null"
+            android:visibility="gone" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/plan_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -41,7 +42,7 @@
             android:textColor="?android:attr/textColorPrimary" />
 
         <Button
-            android:id="@+id/ok"
+            android:id="@+id/plan_modify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="0dp"
@@ -51,35 +52,29 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:text="确定"
+            android:text="修改"
             android:textAllCaps="false"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:textSize="14sp"
             android:textColor="?android:attr/colorAccent"
-            android:stateListAnimator="@null" />
+            android:stateListAnimator="@null"
+            android:visibility="gone" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="6dp"
-        android:text="勾选要预定的食谱（可多选）"
-        android:textSize="13sp"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <ListView
-        android:id="@+id/list"
+    <FrameLayout
+        android:id="@+id/plan_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingBottom="8dp"
-        android:scrollbars="none" />
+        android:layout_weight="1" />
 
-    <include layout="@layout/bottom_nav" />
+    <Button
+        android:id="@+id/plan_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_button_primary"
+        android:text="确定"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textColor="?attr/colorOnAccent"
+        android:stateListAnimator="@null" />
 </LinearLayout>

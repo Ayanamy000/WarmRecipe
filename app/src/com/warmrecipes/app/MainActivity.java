@@ -11,9 +11,11 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,14 +29,21 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends Activity {
+    private static final int REQ_EXPORT = 1001;
+    private static final int REQ_IMPORT = 1002;
+
+    private FrameLayout content;
+    private View homeView, planView;
+    private PlanPage planPage;
+    private boolean planActive = false;
+    private Button navHome, navPlan;
+
     private ListView list;
     private EditText searchInput;
     private LinearLayout chipContainer;
     private RecipeAdapter adapter;
-    private String selectedCategory = null; // null = 全部
+    private String selectedCategory = null;
     private String appliedThemeId;
-    private static final int REQ_EXPORT = 1001;
-    private static final int REQ_IMPORT = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,24 +53,33 @@ public class MainActivity extends Activity {
 
         appliedThemeId = ThemeManager.current(this).id;
 
-        TextView title = findViewById(R.id.title);
+        content = findViewById(R.id.content);
+        homeView = LayoutInflater.from(this).inflate(R.layout.fragment_home, content, false);
+        planPage = new PlanPage(this);
+        planView = planPage.getView();
+        content.addView(homeView);
+        content.addView(planView);
+        planView.setVisibility(View.GONE);
+
+        navHome = findViewById(R.id.nav_home);
+        navPlan = findViewById(R.id.nav_plan);
+
+        TextView title = homeView.findViewById(R.id.title);
         title.setText(R.string.app_name);
-        Button themeBtn = findViewById(R.id.btn_theme);
+        Button themeBtn = homeView.findViewById(R.id.btn_theme);
         themeBtn.setOnClickListener(v -> startActivity(new Intent(this, ThemeActivity.class)));
-        Button moreBtn = findViewById(R.id.btn_more);
+        Button moreBtn = homeView.findViewById(R.id.btn_more);
         moreBtn.setOnClickListener(v -> showMoreMenu());
 
-        searchInput = findViewById(R.id.search_input);
-        chipContainer = findViewById(R.id.chip_container);
-        list = findViewById(R.id.list);
-        TextView emptyView = findViewById(R.id.empty_view);
-        Button fab = findViewById(R.id.fab_add);
+        searchInput = homeView.findViewById(R.id.search_input);
+        chipContainer = homeView.findViewById(R.id.chip_container);
+        list = homeView.findViewById(R.id.list);
+        TextView emptyView = homeView.findViewById(R.id.empty_view);
+        Button fab = homeView.findViewById(R.id.fab_add);
 
         adapter = new RecipeAdapter();
         list.setAdapter(adapter);
         list.setEmptyView(emptyView);
-
-        buildChips();
 
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
@@ -78,7 +96,9 @@ public class MainActivity extends Activity {
             startActivity(i);
         });
 
-        Nav.wire(this, false);
+        navHome.setOnClickListener(v -> switchTab(false));
+        navPlan.setOnClickListener(v -> switchTab(true));
+        updateNav();
     }
 
     @Override
@@ -90,6 +110,32 @@ public class MainActivity extends Activity {
         }
         buildChips();
         refresh();
+        planPage.refresh();
+    }
+
+    private void switchTab(boolean toPlan) {
+        if (toPlan == planActive) return;
+        planActive = toPlan;
+        if (toPlan) planPage.refresh();
+        View in = toPlan ? planView : homeView;
+        View out = toPlan ? homeView : planView;
+        int w = content.getWidth();
+        if (w <= 0) w = getResources().getDisplayMetrics().widthPixels;
+        in.setVisibility(View.VISIBLE);
+        in.setTranslationX(toPlan ? w : -w);
+        in.animate().translationX(0).setDuration(240)
+                .setInterpolator(new DecelerateInterpolator()).start();
+        out.animate().translationX(toPlan ? -w : w).setDuration(240)
+                .setInterpolator(new DecelerateInterpolator())
+                .withEndAction(() -> out.setVisibility(View.GONE)).start();
+        updateNav();
+    }
+
+    private void updateNav() {
+        int accent = colorAttr(android.R.attr.colorAccent);
+        int secondary = colorAttr(android.R.attr.textColorSecondary);
+        navHome.setTextColor(planActive ? secondary : accent);
+        navPlan.setTextColor(planActive ? accent : secondary);
     }
 
     private void showMoreMenu() {
@@ -169,21 +215,6 @@ public class MainActivity extends Activity {
         updateChips();
     }
 
-    private void addCategoryChip(CategoryStore.Category cat) {
-        Button b = new Button(this);
-        b.setAllCaps(false);
-        b.setBackgroundResource(R.drawable.bg_chip);
-        b.setTag(cat.name);
-        CategoryUi.styleChip(this, b, cat, dp(24));
-        b.setOnClickListener(v -> { selectedCategory = (String) v.getTag(); updateChips(); refresh(); });
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        int m = dp(4);
-        lp.setMargins(m, m, m, m);
-        b.setPadding(dp(12), dp(6), dp(12), dp(6));
-        chipContainer.addView(b, lp);
-    }
-
     private void addChip(String label, String value) {
         Button b = new Button(this);
         b.setText(label);
@@ -196,6 +227,21 @@ public class MainActivity extends Activity {
         int m = dp(4);
         lp.setMargins(m, m, m, m);
         b.setPadding(dp(14), dp(6), dp(14), dp(6));
+        chipContainer.addView(b, lp);
+    }
+
+    private void addCategoryChip(CategoryStore.Category cat) {
+        Button b = new Button(this);
+        b.setAllCaps(false);
+        b.setBackgroundResource(R.drawable.bg_chip);
+        b.setTag(cat.name);
+        CategoryUi.styleChip(this, b, cat, dp(24));
+        b.setOnClickListener(v -> { selectedCategory = (String) v.getTag(); updateChips(); refresh(); });
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int m = dp(4);
+        lp.setMargins(m, m, m, m);
+        b.setPadding(dp(12), dp(6), dp(12), dp(6));
         chipContainer.addView(b, lp);
     }
 

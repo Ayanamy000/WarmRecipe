@@ -13,7 +13,7 @@ $app   = "$tmp\app"
 $aj    = "$tmp\android.jar"
 $ks    = "$tmp\release.keystore"
 $build = "$tmp\build"
-$apk   = "$tmp\WarmRecipe-v1.4.apk"
+$apk   = "$tmp\WarmRecipe-v1.5.apk"
 
 # --- stage into ASCII temp dir ---
 Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
@@ -61,6 +61,6 @@ Write-Host "== verify =="
 & java -jar "$bt\lib\apksigner.jar" verify --print-certs $apk
 
 # --- copy APK back to workspace ---
-Copy-Item $apk "$ws\WarmRecipe-v1.4.apk" -Force
+Copy-Item $apk "$ws\WarmRecipe-v1.5.apk" -Force
 Write-Host ""
-Write-Host "APK built: $ws\WarmRecipe-v1.4.apk"
+Write-Host "APK built: $ws\WarmRecipe-v1.5.apk"
