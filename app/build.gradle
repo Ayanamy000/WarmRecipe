@@ -1,0 +1,41 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.warmrecipes.app'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.warmrecipes.app"
+        minSdk 26
+        targetSdk 35
+        versionCode 7
+        versionName "1.51"
+    }
+
+    // 兼容本项目的传统目录结构（AndroidManifest.xml / src / res 直接位于 app 模块下）
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    // 纯原生 Android，零第三方依赖
+}

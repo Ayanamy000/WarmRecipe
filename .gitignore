@@ -1,4 +1,4 @@
-﻿# Android SDK (downloaded locally, not source)
+# Android SDK (downloaded locally, not source)
 /sdk/
 
 # Signing key - never commit
@@ -11,3 +11,13 @@
 # OS files
 Thumbs.db
 .DS_Store
+
+# Software copyright registration materials (personal, keep local)
+/软著材料/
+
+# Gradle / Android Studio
+.gradle/
+local.properties
+app/build/
+.idea/
+*.iml

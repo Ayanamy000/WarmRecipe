@@ -22,12 +22,17 @@ Copy-Item $appSrc $app -Recurse
 Copy-Item $ajSrc  $aj
 Copy-Item $ksSrc  $ks
 
+# Inject package attribute into the temp manifest (Gradle uses `namespace`; aapt2 still requires `package`)
+$mfXml = Get-Content "$app\AndroidManifest.xml" -Raw -Encoding UTF8
+$mfXml = $mfXml.Replace('<manifest xmlns:android="http://schemas.android.com/apk/res/android">', '<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.warmrecipes.app">')
+Set-Content -Path "$app\AndroidManifest.xml" -Value $mfXml -Encoding UTF8 -NoNewline
+
 Write-Host "== aapt2 compile =="
 & "$bt\aapt2.exe" compile --dir "$app\res" -o "$build\res.zip"
 if ($LASTEXITCODE -ne 0) { throw "aapt2 compile failed: $LASTEXITCODE" }
 
 Write-Host "== aapt2 link =="
-& "$bt\aapt2.exe" link -o "$build\app-unsigned.apk" -I $aj --manifest "$app\AndroidManifest.xml" -R "$build\res.zip" --java "$build\gen" --auto-add-overlay
+& "$bt\aapt2.exe" link -o "$build\app-unsigned.apk" -I $aj --manifest "$app\AndroidManifest.xml" -R "$build\res.zip" --java "$build\gen" --custom-package com.warmrecipes.app --min-sdk-version 26 --target-sdk-version 35 --version-code 7 --version-name 1.51 --auto-add-overlay
 if ($LASTEXITCODE -ne 0) { throw "aapt2 link failed: $LASTEXITCODE" }
 
 Write-Host "== javac =="
