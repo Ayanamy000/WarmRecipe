@@ -8,6 +8,7 @@
         <item name="android:colorAccent">#E8A87C</item>
         <item name="android:statusBarColor">#FBF4EA</item>
         <item name="android:navigationBarColor">#FBF4EA</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:textColorPrimary">#4A3B2F</item>

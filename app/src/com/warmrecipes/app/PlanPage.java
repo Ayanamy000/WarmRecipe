@@ -184,7 +184,7 @@ public class PlanPage {
         @Override
         public View getView(int i, View cv, ViewGroup parent) {
             View v = cv;
-            if (v == null) v = LayoutInflater.from(a).inflate(R.layout.item_recipe, parent, false);
+            if (v == null) v = LayoutInflater.from(a).inflate(R.layout.item_recipe_plan, parent, false);
             Recipe r = data.get(i);
             ((TextView) v.findViewById(R.id.emoji)).setText(r.emoji);
             ((TextView) v.findViewById(R.id.name)).setText(r.name);
