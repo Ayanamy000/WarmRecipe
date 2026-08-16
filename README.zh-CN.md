@@ -18,7 +18,7 @@
 
 ## 安装到安卓手机
 
-1. 把 `温馨食谱-v1.5.apk`（或 `WarmRecipe-v1.5.apk`）传到手机（微信/QQ 文件传输、数据线、网盘均可）。
+1. 把 `温馨食谱-v1.51.apk`（或 `WarmRecipe-v1.51.apk`）传到手机（微信/QQ 文件传输、数据线、网盘均可）。
 2. 手机上点击该 APK 安装；若提示「未知来源应用」，在设置里允许「安装未知应用」即可（首次安装时系统会引导）。
 3. 桌面出现「温馨食谱」图标，点开即用。
 
@@ -36,22 +36,19 @@
 │     ├─ DetailActivity.java   # 详情（食材 → 步骤）
 │     ├─ EditActivity.java     # 新建 / 编辑
 │     ├─ ThemeActivity.java    # 主题配色选择
-│     ├─ PlanSelectActivity.java   # 预定：多选食谱
-│     ├─ PlanShoppingActivity.java # 购物清单页
-│     ├─ PlanCookingActivity.java  # 烹饪页
+│     ├─ PlanPage.java         # 预定页（选菜/购物/烹饪）
 │     ├─ Recipe.java           # 数据模型 + 时长估算
 │     ├─ RecipeStore.java      # JSON 本机存储
 │     ├─ PlanStore.java        # 预定清单（合并）
 │     ├─ CategoryStore.java    # 自定义品类管理
 │     ├─ CategoryUi.java       # 品类图标渲染
-│     ├─ Nav.java              # 底部菜单栏
 │     ├─ Palette.java          # 配色定义
 │     └─ ThemeManager.java     # 主题读写/应用
 ├─ sdk/                        # 本地 Android SDK（build-tools 35.0.0 + android-35）
 ├─ tools/                      # Fetch(下载器) / MakeIcon(图标生成)
 ├─ build.ps1                   # 一键构建脚本（无需 Gradle）
 ├─ release.keystore            # 签名密钥（密码 recipe123，请妥善保管/自行更换）
-└─ 温馨食谱-v1.5.apk           # 构建产物（可直接安装）
+└─ 温馨食谱-v1.51.apk           # 构建产物（可直接安装）
 ```
 
 ## 重新构建
@@ -64,7 +61,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 ```
 
 构建流程：`aapt2 编译资源 → link 生成 R.java → javac → d8 转 dex → 打包 → zipalign → apksigner 签名`。
-产物输出为 `WarmRecipe-v1.5.apk`（会自动拷回项目根目录）。
+产物输出为 `WarmRecipe-v1.51.apk`（会自动拷回项目根目录）。
 
 > 说明：aapt2 等原生工具在 Windows 上无法打开含中文的路径，因此脚本会在系统临时目录（ASCII 路径）完成构建后把 APK 拷回。
 

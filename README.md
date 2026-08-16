@@ -18,7 +18,7 @@ A cozy, minimalist recipe-book app for Android. Pure native with **zero third-pa
 
 ## Install on an Android phone
 
-1. Copy `温馨食谱-v1.5.apk` (or `WarmRecipe-v1.5.apk`) to the phone (WeChat/QQ file transfer, USB, or cloud drive).
+1. Copy `温馨食谱-v1.51.apk` (or `WarmRecipe-v1.51.apk`) to the phone (WeChat/QQ file transfer, USB, or cloud drive).
 2. Tap the APK to install; if prompted about "unknown sources", allow "Install unknown apps" (the system guides you on first install).
 3. The "温馨食谱" icon appears on the home screen — tap to open.
 
@@ -36,22 +36,19 @@ A cozy, minimalist recipe-book app for Android. Pure native with **zero third-pa
 │     ├─ DetailActivity.java   # detail (ingredients -> steps)
 │     ├─ EditActivity.java     # create / edit
 │     ├─ ThemeActivity.java    # theme picker
-│     ├─ PlanSelectActivity.java   # pick recipes for planning
-│     ├─ PlanShoppingActivity.java # shopping list
-│     ├─ PlanCookingActivity.java  # cooking view
+│     ├─ PlanPage.java         # plan tab (select / shopping / cooking)
 │     ├─ Recipe.java           # data model + duration estimate
 │     ├─ RecipeStore.java      # JSON local storage
 │     ├─ PlanStore.java        # planning list (merged)
 │     ├─ CategoryStore.java    # custom categories
 │     ├─ CategoryUi.java       # category icon rendering
-│     ├─ Nav.java              # bottom navigation
 │     ├─ Palette.java          # palette definitions
 │     └─ ThemeManager.java     # theme read/apply
 ├─ sdk/                        # local Android SDK (build-tools 35.0.0 + android-35)
 ├─ tools/                      # Fetch (downloader) / MakeIcon (icon generator)
 ├─ build.ps1                   # one-shot build script (no Gradle)
 ├─ release.keystore            # signing key (password: recipe123 — keep safe / replace)
-└─ 温馨食谱-v1.5.apk           # build output (installable)
+└─ 温馨食谱-v1.51.apk           # build output (installable)
 ```
 
 ## Rebuilding
@@ -64,7 +61,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 ```
 
 Pipeline: `aapt2 compile resources → link to generate R.java → javac → d8 dex → package → zipalign → apksigner sign`.
-The output `WarmRecipe-v1.5.apk` is copied back to the project root.
+The output `WarmRecipe-v1.51.apk` is copied back to the project root.
 
 > Note: aapt2 and other native tools cannot open non-ASCII paths on Windows, so the script stages the build in the system temp directory (ASCII path) and copies the APK back.
 
